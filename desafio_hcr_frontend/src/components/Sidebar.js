@@ -1,13 +1,18 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function Sidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
+
+  if (location.pathname === "/register-group-business") {
+    return null; // Não renderiza o Sidebar
+  }
 
   return (
     <div className="sidebar">

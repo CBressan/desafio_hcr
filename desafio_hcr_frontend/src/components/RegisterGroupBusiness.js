@@ -31,8 +31,8 @@ function RegisterGroupBusiness() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/group-businesses/", formData);
-      navigate("/login");
+      await api.post("/group-businesses/create/", formData);
+      navigate("/");
     } catch (error) {
       console.error("Erro ao cadastrar Group Business:", error);
     }

@@ -1,10 +1,22 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import GroupBusiness
 from .serializers import GroupBusinessSerializer
+
+
+class GroupBusinessCreateView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = GroupBusinessSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GroupBusinessView(APIView):
@@ -18,13 +30,6 @@ class GroupBusinessView(APIView):
         group_businesses = GroupBusiness.objects.all()
         serializer = GroupBusinessSerializer(group_businesses, many=True)
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        serializer = GroupBusinessSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_201_CREATED)
-        return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, id=None):
         group_business = get_object_or_404(GroupBusiness, id=id)

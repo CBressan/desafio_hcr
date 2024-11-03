@@ -24,6 +24,13 @@ class LoginSerializer(serializers.Serializer):
 
 class CustomJWTAuthentication(JWTAuthentication):
 
+    def authenticate(self, request):
+        header = self.get_header(request)
+        if header is None:
+            return None
+
+        return super().authenticate(request)
+
     def get_user(self, validated_token):
         group_business_id = validated_token.get('group_business_id')
 
